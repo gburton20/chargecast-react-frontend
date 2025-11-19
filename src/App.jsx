@@ -54,8 +54,8 @@ function App() {
     
     const params = new URLSearchParams()
     params.append('postcodes', selectedRegions.map(r => r.postcode).join(','))
-    params.append('regionIds', selectedRegions.map(r => r.regionId).join(','))
-    params.append('regions', selectedRegions.map(r => r.region).join(','))
+    // params.append('regionIds', selectedRegions.map(r => r.regionId).join(','))
+    // params.append('regions', selectedRegions.map(r => r.region).join(','))
     
     return `${STREAMLIT_BASE_URL}?${params.toString()}`
   }
