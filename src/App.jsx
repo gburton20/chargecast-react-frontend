@@ -73,19 +73,36 @@ function App() {
       />
       
       {streamlitUrl && (
-        <div className="streamlit-container">
-          <iframe
-            ref={streamlitIframeRef}
-            src={streamlitUrl}
-            title="ChargeCast Dashboard"
+        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+          <a 
+            href={streamlitUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
             style={{
-              width: '100%',
-              height: '800px',
-              border: 'none',
-              marginTop: '2rem'
+              display: 'inline-block',
+              padding: '1rem 2rem',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              fontSize: '1.1rem',
+              fontWeight: '500',
+              textAlign: 'center',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              transition: 'background-color 0.3s ease'
             }}
-            allow="cross-origin-isolated"
-          />
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#45a049'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#4CAF50'}
+          >
+            📊 View Carbon Intensity Dashboard →
+          </a>
+          <p style={{ 
+            marginTop: '1rem', 
+            color: '#666',
+            fontSize: '0.9rem'
+          }}>
+            Opens in a new tab with your selected regions: {selectedRegions.map(r => r.postcode).join(', ')}
+          </p>
         </div>
       )}
     </div>
