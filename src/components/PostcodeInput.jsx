@@ -111,7 +111,7 @@ function PostcodeInput({ onLookup }) {
             whiteSpace: 'nowrap'
           }}
         >
-          🔍 Find DNO
+          Submit
         </button>
       </form>
       <p style={{ 

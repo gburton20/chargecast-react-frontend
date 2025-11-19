@@ -20,13 +20,20 @@ function App() {
       // Fetch current carbon intensity data to validate postcode and get region
       const response = await carbonAPI.getCurrent30m(postcode)
       
-      // Extract region info from API response (nested under data.data)
-      const apiData = response.data?.data
+      // Extract region info from API response
+      // Backend returns: { data: { shortname, postcode, regionid, dnoregion, ... } }
+      const responseData = response.data.data
+      
+      console.log('Full response:', response)
+      console.log('Response data:', responseData)
+      console.log('Shortname:', responseData?.shortname)
+      console.log('Postcode:', responseData?.postcode)
+      
       const regionData = {
-        postcode: apiData?.postcode || postcode,
-        region: apiData?.shortname || 'Unknown Region',
-        dno: apiData?.dnoregion || apiData?.shortname || 'Unknown DNO',
-        regionId: apiData?.regionid || null
+        postcode: postcode, // Use the full postcode that was submitted
+        region: responseData?.shortname || 'Unknown Region', // Shortname from nested data
+        dno: responseData?.dnoregion || responseData?.shortname || 'Unknown DNO',
+        regionId: responseData?.regionid || null // Region ID from nested data
       }
 
       // Add to selected regions if not already present
