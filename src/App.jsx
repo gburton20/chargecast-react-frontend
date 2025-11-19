@@ -4,6 +4,7 @@ import PostcodeContainer from './components/PostcodeInputContainer'
 import FootprintForecastContainer from './components/Footprint forecast/FootprintForecastContainer'
 import DynamicRoutingForecast from './components/Dynamic routing forecast/DynamicRoutingForecast'
 import { carbonAPI } from './services/api'
+import logo from './assets/ChargeCastLogo.svg'
 
 function App() {
   const [selectedRegions, setSelectedRegions] = useState([])
@@ -74,7 +75,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <img src='src/assets/ChargeCastLogo.svg'/>
+      <img src={logo} alt="ChargeCast Logo" />
       <h2 style={{ marginBottom: '0.5rem' }}>Forecast and minimise the carbon intensity of your fleet's Scope 2 emissions</h2>
 
       <PostcodeContainer
