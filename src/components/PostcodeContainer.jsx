@@ -1,33 +1,6 @@
-import { useState } from 'react';
 import PostcodeInput from './PostcodeInput';
-import { carbonAPI } from '../services/api';
 
-function PostcodeContainer() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [regions, setRegions] = useState([]);
-
-  const handleLookup = async (postcode) => {
-    setLoading(true);
-    setError(null);
-    setRegions([]);
-
-    try {
-      // Fetch current carbon intensity data for the postcode
-      const response = await carbonAPI.getCurrent30m(postcode);
-      
-      // Mock regions for display (you can customize based on actual API response)
-      setRegions([
-        { postcode: 'DH7 9PT', region: 'North East England' },
-        { postcode: 'S75 1FJ', region: 'Yorkshire' },
-        { postcode: 'CO6 2NS', region: 'East England' }
-      ]);
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to lookup DNO. Please check the postcode.');
-    } finally {
-      setLoading(false);
-    }
-  };
+function PostcodeContainer({ regions, loading, error, onPostcodeLookup, onRemoveRegion }) {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
@@ -41,7 +14,7 @@ function PostcodeContainer() {
           Unsure which UK Distribution Network Operator (DNO) your facility belongs to? 
           Enter your postcode here to check
         </p>
-        <PostcodeInput onLookup={handleLookup} />
+        <PostcodeInput onLookup={onPostcodeLookup} />
       </div>
 
       {loading && <p>Loading...</p>}
@@ -65,10 +38,27 @@ function PostcodeContainer() {
                 backgroundColor: '#e8f5e9',
                 borderRadius: '8px',
                 border: '1px solid #4caf50',
-                flex: '1 1 200px'
+                flex: '1 1 200px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
               }}
             >
-              ✓ {region.postcode} - {region.region}
+              <span>✓ {region.postcode} - {region.region}</span>
+              <button
+                onClick={() => onRemoveRegion(region.postcode)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#666',
+                  cursor: 'pointer',
+                  fontSize: '1.2rem',
+                  padding: '0 0.5rem'
+                }}
+                title="Remove region"
+              >
+                ×
+              </button>
             </div>
           ))}
         </div>
