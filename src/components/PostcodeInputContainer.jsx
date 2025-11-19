@@ -4,15 +4,10 @@ function PostcodeContainer({ regions, loading, error, onPostcodeLookup, onRemove
 
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h2 style={{ marginBottom: '0.5rem' }}>Fleet Operating Regions</h2>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>
-        Select the grid regions where your eHGV fleet operates
-      </p>
 
       <div style={{ marginBottom: '2rem' }}>
         <p style={{ marginBottom: '1rem', fontWeight: '500' }}>
-          Unsure which UK Distribution Network Operator (DNO) your facility belongs to? 
-          Enter your postcode here to check
+          Enter the <strong>full UK postcode</strong> of your fleet operational sites (one at a time):
         </p>
         <PostcodeInput onLookup={onPostcodeLookup} />
       </div>
