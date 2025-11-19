@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
+const DynamicRoutingForecast = ({ regions, streamlitUrl }) => {
   if (!regions || regions.length === 0) {
     return (
       <div style={{ 
@@ -9,13 +9,13 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
         color: '#666',
         fontStyle: 'italic' 
       }}>
-        Enter a postcode above to view the carbon footprint forecast
+        Enter a postcode above to view the dynamic routing forecast
       </div>
     )
   }
 
   // Build the Streamlit URL with postcodes
-  const STREAMLIT_BASE_URL = 'https://charge-cast.streamlit.app/'
+  const STREAMLIT_BASE_URL = 'http://charge-cast-routing.streamlit.app/'
   const params = new URLSearchParams()
   params.append('postcodes', regions.map(r => r.postcode).join(','))
   const embedUrl = `${STREAMLIT_BASE_URL}?${params.toString()}&embed=true`
@@ -30,7 +30,7 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
     }}>
       <iframe
         src={embedUrl}
-        title="Carbon Footprint Forecast"
+        title="Dynamic Routing Forecast"
         style={{
           width: '100%',
           height: '800px',
@@ -43,4 +43,4 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   )
 }
 
-export default FootprintForecastContainer
+export default DynamicRoutingForecast

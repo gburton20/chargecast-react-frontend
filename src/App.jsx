@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import PostcodeContainer from './components/PostcodeInputContainer'
 import FootprintForecastContainer from './components/Footprint forecast/FootprintForecastContainer'
-import DynamicRoutingForecast from './components/Dynamic routing forecast/DynamicRoutingForecast'
+import DynamicRoutingForecast from './components/Dynamic routing forecast/DynamicRoutingForecastContainer'
 import { carbonAPI } from './services/api'
 import logo from './assets/ChargeCastLogo.svg'
 
