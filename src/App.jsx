@@ -46,7 +46,7 @@ function App() {
   }
 
   // Streamlit URL - set this to your actual Streamlit dashboard URL
-  const STREAMLIT_BASE_URL = 'https://charge-cast-routing.streamlit.app/?embed=true'
+  const STREAMLIT_BASE_URL = 'https://charge-cast-routing.streamlit.app/'
 
   // Build iframe URL with selected regions as query params
   const getStreamlitUrl = () => {
