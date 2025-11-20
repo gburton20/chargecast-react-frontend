@@ -21,7 +21,7 @@ const OptimalChargingWindowContainer = ({ regions }) => {
       console.log('🔶 Set loading to true')
 
       try {
-        // Fetch 48h forecast data for all regions
+        // Fetch 24h forecast data for all regions
         const forecastPromises = regions.map(region =>
           carbonAPI.getForecast48h(region.postcode)
         )
@@ -45,21 +45,38 @@ const OptimalChargingWindowContainer = ({ regions }) => {
             return
           }
 
+          // Filter to only include data within next 24 hours
+          const now = new Date()
+          const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+          const next24hData = forecastData.filter(point => {
+            const pointTime = new Date(point.from)
+            return pointTime >= now && pointTime <= twentyFourHoursFromNow
+          })
+
+          console.log('🔶 Data filtered to 24h:', next24hData.length, 'points')
+
           // Find optimal 3-hour windows
-          const windows = findOptimal3HourWindows(forecastData, region)
+          const windows = findOptimal3HourWindows(next24hData, region)
           allWindows.push(...windows)
         })
 
-        // Sort all windows by carbon intensity (lowest first) and take top 3 per region
+        // Sort all windows by carbon intensity (lowest first)
         const sortedWindows = allWindows.sort((a, b) => a.avgIntensity - b.avgIntensity)
         
-        // Group by region and take top 3 from each
+        // Group by region and take top 3 non-overlapping windows from each
         const windowsByRegion = {}
         sortedWindows.forEach(window => {
           if (!windowsByRegion[window.postcode]) {
             windowsByRegion[window.postcode] = []
           }
-          if (windowsByRegion[window.postcode].length < 3) {
+          
+          // Check if this window overlaps with any already selected windows for this region
+          const overlaps = windowsByRegion[window.postcode].some(selectedWindow => {
+            return doWindowsOverlap(selectedWindow, window)
+          })
+          
+          // Only add if no overlap and we haven't reached 3 windows yet
+          if (!overlaps && windowsByRegion[window.postcode].length < 3) {
             windowsByRegion[window.postcode].push(window)
           }
         })
@@ -80,6 +97,14 @@ const OptimalChargingWindowContainer = ({ regions }) => {
 
     fetchOptimalWindows()
   }, [regions])
+
+  // Check if two windows overlap
+  const doWindowsOverlap = (window1, window2) => {
+    return (
+      (window1.startTime < window2.endTime && window1.endTime > window2.startTime) ||
+      (window2.startTime < window1.endTime && window2.endTime > window1.startTime)
+    )
+  }
 
   // Find the best 3-hour charging windows (6 consecutive 30-min periods)
   const findOptimal3HourWindows = (data, region) => {
@@ -203,7 +228,7 @@ const OptimalChargingWindowContainer = ({ regions }) => {
         </h3>
         <div className="optimal-window-description">
           <span>🔌</span>
-          <span>Recommended 3-hour charging periods with the lowest carbon intensity in the next 48 hours</span>
+          <span>Recommended 3-hour charging periods with the lowest carbon intensity in the next 24 hours</span>
         </div>
       </div>
 

@@ -75,7 +75,7 @@ function App() {
   return (
     <div className="app-container">
       <img src={logo} alt="ChargeCast Logo" />
-      <h2>Forecast and minimise the carbon intensity of your fleet's Scope 2 emissions</h2>
+      <h2>Forecast and minimise the carbon intensity of your EV fleet's consumed electricity</h2>
 
       <PostcodeContainer
         regions={selectedRegions}
