@@ -1,5 +1,8 @@
 import React from 'react'
 import OptimalChargingWindowContainer from './Optimal charging window/OptimalChargingWindowContainer'
+import Scope2EmissionsContainer from './Scope2EmissionsContainer'
+
+const MAGIC_POSTCODES = ['DH7 9PT', 'S75 1FJ', 'CO6 2NS'];
 
 const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   if (!regions || regions.length === 0) {
@@ -19,6 +22,11 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   console.log('🔹 Footprint Forecast - Postcodes being sent:', regions.map(r => r.postcode).join(', '))
   console.log('🔹 Footprint Forecast - Full iframe URL:', embedUrl)
 
+  // Check if any of the entered postcodes are "magic" postcodes for Scope 2 emissions
+  const magicPostcode = regions.find(r => 
+    MAGIC_POSTCODES.includes(r.postcode.toUpperCase().replace(/\s+/g, ' ').trim())
+  );
+
   return (
     <div className="forecast-container">
       <div className="forecast-iframe-wrapper">
@@ -31,6 +39,10 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
       </div>
       
       <OptimalChargingWindowContainer regions={regions}/>
+      
+      {magicPostcode && (
+        <Scope2EmissionsContainer postcode={magicPostcode.postcode} />
+      )}
     </div>
   )
 }
