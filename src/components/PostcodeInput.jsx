@@ -65,61 +65,29 @@ function PostcodeInput({ onLookup }) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, maxWidth: '250px' }}>
+      <form onSubmit={handleSubmit} className="postcode-form">
+        <div className="postcode-input-wrapper">
           <input
             type="text"
             value={postcode}
             onChange={handleChange}
             placeholder="e.g. SW1A 1AA"
             maxLength="8"
-            style={{
-              padding: '0.5rem',
-              fontSize: '1rem',
-              border: `1px solid ${validationError ? '#dc3545' : '#ccc'}`,
-              borderRadius: '4px',
-              width: '100%',
-              outline: validationError ? '1px solid #dc3545' : 'none'
-            }}
+            className={`postcode-input ${validationError ? 'error' : ''}`}
             aria-invalid={!!validationError}
             aria-describedby={validationError ? 'postcode-error' : undefined}
           />
           {validationError && (
-            <p 
-              id="postcode-error"
-              style={{ 
-                color: '#dc3545', 
-                fontSize: '0.85rem', 
-                marginTop: '0.25rem',
-                marginBottom: 0
-              }}
-            >
+            <p id="postcode-error" className="postcode-input-error">
               {validationError}
             </p>
           )}
         </div>
-        <button
-          type="submit"
-          style={{
-            padding: '0.5rem 1rem',
-            fontSize: '1rem',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap'
-          }}
-        >
+        <button type="submit" className="postcode-submit-button">
           Submit
         </button>
       </form>
-      <p style={{ 
-        fontSize: '0.85rem', 
-        color: '#666', 
-        marginTop: '0.5rem',
-        fontStyle: 'italic'
-      }}>
+      <p className="postcode-hint">
         Must include space (e.g., SW1A 1AA, M1 1AE, B33 8TH)
       </p>
     </div>

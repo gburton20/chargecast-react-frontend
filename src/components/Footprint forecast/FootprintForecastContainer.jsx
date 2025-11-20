@@ -1,14 +1,10 @@
 import React from 'react'
+import OptimalChargingWindowContainer from './Optimal charging window/OptimalChargingWindowContainer'
 
 const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   if (!regions || regions.length === 0) {
     return (
-      <div style={{ 
-        padding: '2rem', 
-        textAlign: 'center', 
-        color: '#666',
-        fontStyle: 'italic' 
-      }}>
+      <div className="forecast-container-empty">
         Enter a postcode above to view the carbon footprint forecast
       </div>
     )
@@ -20,25 +16,21 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   params.append('postcodes', regions.map(r => r.postcode).join(','))
   const embedUrl = `${STREAMLIT_BASE_URL}?${params.toString()}&embed=true`
 
+  console.log('🔹 Footprint Forecast - Postcodes being sent:', regions.map(r => r.postcode).join(', '))
+  console.log('🔹 Footprint Forecast - Full iframe URL:', embedUrl)
+
   return (
-    <div style={{ 
-      width: '100%', 
-      marginTop: '2rem',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-    }}>
-      <iframe
-        src={embedUrl}
-        title="Carbon Footprint Forecast"
-        style={{
-          width: '100%',
-          height: '800px',
-          border: 'none',
-          display: 'block'
-        }}
-        allow="camera;clipboard-read;clipboard-write"
-      />
+    <div className="forecast-container">
+      <div className="forecast-iframe-wrapper">
+        <iframe
+          src={embedUrl}
+          title="Carbon Footprint Forecast"
+          className="forecast-iframe"
+          allow="camera;clipboard-read;clipboard-write"
+        />
+      </div>
+      
+      <OptimalChargingWindowContainer regions={regions}/>
     </div>
   )
 }
