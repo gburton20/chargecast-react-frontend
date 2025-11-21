@@ -91,13 +91,13 @@ function App() {
           onClick={() => setViewMode('footprint')}
           className={`view-mode-button ${viewMode === 'footprint' ? 'active' : ''}`}
         >
-          Footprint forecast
+          Operational footprint's carbon intensity
         </button>
         <button
           onClick={() => setViewMode('routing')}
           className={`view-mode-button ${viewMode === 'routing' ? 'active' : ''}`}
         >
-          Dynamic routing forecast
+          Fleet routing's carbon intensity
         </button>
       </div>
       

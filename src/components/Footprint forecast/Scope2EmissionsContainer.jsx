@@ -168,6 +168,19 @@ const Scope2EmissionsContainer = ({ postcode, allPostcodes = [] }) => {
         )}
       </div>
 
+    <div className="scope2-carbon-price-statement">
+      <em>The 2025 UK carbon price is £41.84 per tCO2e (
+        <a 
+          href="https://www.gov.uk/government/publications/determinations-of-the-uk-ets-carbon-price/uk-ets-carbon-prices-for-use-in-civil-penalties-2025" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          source
+        </a>)
+      </em>
+    </div>
+
+
       <div className="scope2-summary">
         <div className="scope2-stat">
           <div className="scope2-stat-value">{emissions.total.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>

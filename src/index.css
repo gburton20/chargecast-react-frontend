@@ -477,6 +477,11 @@
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
+.scope2-carbon-price-statement {
+  text-align: center;
+  padding: 0 0 2rem 0;
+}
+
 .scope2-loading,
 .scope2-error {
   text-align: center;
