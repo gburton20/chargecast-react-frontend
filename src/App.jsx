@@ -75,7 +75,7 @@ function App() {
   return (
     <div className="app-container">
       <img src={logo} alt="ChargeCast Logo" />
-      <h2><span style={{ color: '#10B981' }}>Minimise the carbon intensity</span> of your EV fleet's consumed electricity</h2>
+      <h2><span style={{ color: '#10B981' }}>Minimise the carbon intensity</span> of the electricity your EV fleet consumes</h2>
 
       <PostcodeContainer
         regions={selectedRegions}

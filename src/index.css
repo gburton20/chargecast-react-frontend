@@ -383,11 +383,12 @@
 
 /* Scope 2 Emissions Container */
 .scope2-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #FDF0F9;
   padding: 2rem;
   border-radius: 12px;
   margin-top: 2rem;
-  color: white;
+  border: 1px solid #B91048;
+  color: black;
   box-shadow: var(--shadow-md);
 }
 
@@ -428,7 +429,7 @@
 }
 
 .scope2-stat {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: white;
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: 12px;
@@ -476,7 +477,7 @@
 }
 
 .scope2-daily-item {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: white;
   padding: 1rem;
   border-radius: 8px;
   display: flex;
@@ -500,6 +501,8 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   font-size: 0.875rem;
+  margin-left: auto;
+  margin-right: 1rem;
 }
 
 .scope2-daily-emissions {

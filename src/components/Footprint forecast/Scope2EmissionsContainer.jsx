@@ -62,19 +62,31 @@ const Scope2EmissionsContainer = ({ postcode }) => {
 
       if (carbonPoint) {
         // Emissions (kg CO2e) = Usage (kWh) × Carbon Intensity (g CO2e/kWh) / 1000
-        const intensityValue = carbonPoint.intensity?.forecast || carbonPoint.intensity;
-        const emissionsKg = (usage.kwh * intensityValue) / 1000;
-        totalEmissions += emissionsKg;
-        matchedIntervals++;
-
-        // Group by day
-        const day = usage.from.split(' ')[0];
-        if (!dailyBreakdown[day]) {
-          dailyBreakdown[day] = { emissions: 0, usage: 0, count: 0 };
+        // Extract intensity value: use forecast if available, otherwise use actual
+        let intensityValue;
+        if (typeof carbonPoint.intensity === 'number') {
+          intensityValue = carbonPoint.intensity;
+        } else if (carbonPoint.intensity?.forecast !== undefined && carbonPoint.intensity?.forecast !== null) {
+          intensityValue = carbonPoint.intensity.forecast;
+        } else if (carbonPoint.intensity?.actual !== undefined && carbonPoint.intensity?.actual !== null) {
+          intensityValue = carbonPoint.intensity.actual;
         }
-        dailyBreakdown[day].emissions += emissionsKg;
-        dailyBreakdown[day].usage += usage.kwh;
-        dailyBreakdown[day].count++;
+        
+        // Only calculate emissions if we have a valid intensity value
+        if (intensityValue !== undefined && intensityValue !== null && !isNaN(intensityValue)) {
+          const emissionsKg = (usage.kwh * intensityValue) / 1000;
+          totalEmissions += emissionsKg;
+          matchedIntervals++;
+
+          // Group by day
+          const day = usage.from.split(' ')[0];
+          if (!dailyBreakdown[day]) {
+            dailyBreakdown[day] = { emissions: 0, usage: 0, count: 0 };
+          }
+          dailyBreakdown[day].emissions += emissionsKg;
+          dailyBreakdown[day].usage += usage.kwh;
+          dailyBreakdown[day].count++;
+        }
       }
     });
 
@@ -129,27 +141,27 @@ const Scope2EmissionsContainer = ({ postcode }) => {
   return (
     <div className="scope2-container">
       <div className="scope2-header">
-        <h3>🏭 Scope 2 Emissions Report for the past week</h3>
-        <p className="scope2-facility">{facilityName}</p>
+        <h3>Scope 2 emissions estimate for the past week 🏭</h3>
+        <p className="scope2-facility">For {facilityName}</p>
       </div>
 
       <div className="scope2-summary">
         <div className="scope2-stat">
-          <div className="scope2-stat-value">{emissions.total.toFixed(2)}</div>
+          <div className="scope2-stat-value">{emissions.total.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>
           <div className="scope2-stat-label">kg CO₂e</div>
-          <div className="scope2-stat-sublabel">Total Emissions (7 days)</div>
+          <div className="scope2-stat-sublabel">Total emissions (for the previous seven days)</div>
         </div>
 
         <div className="scope2-stat">
-          <div className="scope2-stat-value">{emissions.totalUsage.toFixed(0)}</div>
+          <div className="scope2-stat-value">{emissions.totalUsage.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>
           <div className="scope2-stat-label">kWh</div>
-          <div className="scope2-stat-sublabel">Total Usage</div>
+          <div className="scope2-stat-sublabel">Total electricity usage (for the previous seven days)</div>
         </div>
 
         <div className="scope2-stat">
           <div className="scope2-stat-value">{emissions.avgIntensity.toFixed(0)}</div>
           <div className="scope2-stat-label">g CO₂e/kWh</div>
-          <div className="scope2-stat-sublabel">Average Intensity</div>
+          <div className="scope2-stat-sublabel">Average carbon intensity for this DNO (across the previous seven days)</div>
         </div>
       </div>
 
@@ -167,15 +179,31 @@ const Scope2EmissionsContainer = ({ postcode }) => {
               </div>
               <div className="scope2-daily-values">
                 <span className="scope2-daily-emissions">
-                  {day.emissions.toFixed(2)} kg CO₂e
+                  {day.emissions.toFixed(0)} kg CO₂e
                 </span>
                 <span className="scope2-daily-usage">
-                  {day.usage.toFixed(0)} kWh
+                  {day.usage.toLocaleString('en-GB', { maximumFractionDigits: 0 })} kWh
                 </span>
                 <span className="scope2-daily-intensity">
-                  {day.avgIntensity.toFixed(0)} g/kWh
+                  {day.avgIntensity.toFixed(0)} gCO2/kWh
                 </span>
               </div>
+              <button 
+                className="postcode-submit-button"
+                onClick={() => {
+                  const csvContent = `Date,Emissions (kg CO₂e),Usage (kWh),Average Intensity (gCO2/kWh)\n${day.date},${day.emissions.toFixed(2)},${day.usage.toFixed(2)},${day.avgIntensity.toFixed(2)}`;
+                  const blob = new Blob([csvContent], { type: 'text/csv' });
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `emissions-${day.date}.csv`;
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                }}
+                title="Export day data to CSV"
+              >
+                Export
+              </button>
             </div>
           ))}
         </div>
@@ -186,7 +214,7 @@ const Scope2EmissionsContainer = ({ postcode }) => {
           📊 Calculated from {emissions.matchedIntervals} matched 30-minute intervals
         </p>
         <p className="scope2-methodology">
-          Methodology: Emissions = Usage (kWh) × Regional Carbon Intensity (g CO₂e/kWh)
+          Methodology: Scope 2 emissions (kg CO2e) = Electricity usage (kWh) × Regional Carbon Intensity (g CO₂e/kWh / 1,000)
         </p>
       </div>
     </div>
