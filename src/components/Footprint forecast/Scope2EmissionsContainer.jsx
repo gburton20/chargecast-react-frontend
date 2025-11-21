@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { USAGE_DATA, FACILITY_NAMES } from './usageData';
 
-const Scope2EmissionsContainer = ({ postcode }) => {
+const Scope2EmissionsContainer = ({ postcode, allPostcodes = [] }) => {
   const [carbonData, setCarbonData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [emissions, setEmissions] = useState(null);
+  const [selectedPostcode, setSelectedPostcode] = useState(postcode);
 
-  const normalizedPostcode = postcode.toUpperCase().replace(/\s+/g, ' ').trim();
+  // Get all available magic postcodes from the entered postcodes
+  const availablePostcodes = allPostcodes
+    .map(pc => pc.toUpperCase().replace(/\s+/g, ' ').trim())
+    .filter(pc => USAGE_DATA[pc]);
+
+  const normalizedPostcode = selectedPostcode.toUpperCase().replace(/\s+/g, ' ').trim();
   const facilityName = FACILITY_NAMES[normalizedPostcode] || normalizedPostcode;
 
   useEffect(() => {
@@ -142,7 +148,24 @@ const Scope2EmissionsContainer = ({ postcode }) => {
     <div className="scope2-container">
       <div className="scope2-header">
         <h3>Scope 2 emissions estimate for the past week 🏭</h3>
-        <p className="scope2-facility">For {facilityName}</p>
+        
+        {availablePostcodes.length > 1 && (
+          <div className="scope2-postcode-toggle">
+            <label htmlFor="postcode-select">View facility: </label>
+            <select 
+              id="postcode-select"
+              value={selectedPostcode}
+              onChange={(e) => setSelectedPostcode(e.target.value)}
+              className="scope2-postcode-select"
+            >
+              {availablePostcodes.map(pc => (
+                <option key={pc} value={pc}>
+                  {pc} - {FACILITY_NAMES[pc] || pc}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="scope2-summary">

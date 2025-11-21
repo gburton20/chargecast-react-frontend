@@ -207,8 +207,8 @@
 
 .optimal-window-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
@@ -224,6 +224,40 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.optimal-window-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.optimal-window-toggle label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.optimal-postcode-select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 2px solid var(--color-success);
+  background-color: white;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optimal-postcode-select:hover {
+  background-color: var(--color-success-light);
+}
+
+.optimal-postcode-select:focus {
+  outline: none;
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .optimal-window-loading,
@@ -407,6 +441,40 @@
   font-size: 1.125rem;
   opacity: 0.9;
   margin: 0;
+}
+
+.scope2-postcode-toggle {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.scope2-postcode-toggle label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.scope2-postcode-select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 2px solid #B91048;
+  background-color: white;
+  color: black;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scope2-postcode-select:hover {
+  background-color: rgba(185, 16, 72, 0.1);
+}
+
+.scope2-postcode-select:focus {
+  outline: none;
+  border-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .scope2-loading,

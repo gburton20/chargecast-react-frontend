@@ -23,7 +23,7 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
   console.log('🔹 Footprint Forecast - Full iframe URL:', embedUrl)
 
   // Check if any of the entered postcodes are "magic" postcodes for Scope 2 emissions
-  const magicPostcode = regions.find(r => 
+  const magicPostcodes = regions.filter(r => 
     MAGIC_POSTCODES.includes(r.postcode.toUpperCase().replace(/\s+/g, ' ').trim())
   );
 
@@ -40,8 +40,11 @@ const FootprintForecastContainer = ({ regions, streamlitUrl }) => {
       
       <OptimalChargingWindowContainer regions={regions}/>
       
-      {magicPostcode && (
-        <Scope2EmissionsContainer postcode={magicPostcode.postcode} />
+      {magicPostcodes.length > 0 && (
+        <Scope2EmissionsContainer 
+          postcode={magicPostcodes[0].postcode}
+          allPostcodes={magicPostcodes.map(r => r.postcode)}
+        />
       )}
     </div>
   )

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { carbonAPI } from '../../../services/api'
+import { FACILITY_NAMES } from '../usageData'
 
 const OptimalChargingWindowContainer = ({ regions }) => {
   const [optimalWindows, setOptimalWindows] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [selectedPostcode, setSelectedPostcode] = useState(regions?.[0]?.postcode || '')
 
   console.log('🔶 OptimalChargingWindowContainer - Received regions:', regions)
 
@@ -220,6 +222,16 @@ const OptimalChargingWindowContainer = ({ regions }) => {
 
   console.log('🔶 Rendering windows:', optimalWindows.length)
 
+  // Filter windows based on selected postcode (or show all if no selection)
+  const filteredWindows = selectedPostcode 
+    ? optimalWindows.filter(w => w.postcode === selectedPostcode)
+    : optimalWindows;
+
+  // Get unique postcodes from optimal windows for dropdown - only include magic postcodes
+  const MAGIC_POSTCODES = ['DH7 9PT', 'S75 1FJ', 'CO6 2NS'];
+  const availablePostcodes = [...new Set(optimalWindows.map(w => w.postcode))]
+    .filter(pc => MAGIC_POSTCODES.includes(pc));
+
   return (
     <div className="optimal-window-container">
       <div className="optimal-window-header">
@@ -228,12 +240,33 @@ const OptimalChargingWindowContainer = ({ regions }) => {
         </h3>
         <div className="optimal-window-description">
           <span>🔌</span>
-          <span>Recommended 3-hour charging periods with the lowest carbon intensity in the next 24 hours</span>
+          <span>Recommended three-hour charging periods in your Distribution Network Operator (DNO) region with the lowest carbon intensity in the next 24 hours</span>
         </div>
+        
+        {availablePostcodes.length > 1 && (
+          <div className="optimal-window-toggle">
+            <label htmlFor="optimal-postcode-select">View facility: </label>
+            <select 
+              id="optimal-postcode-select"
+              value={selectedPostcode}
+              onChange={(e) => setSelectedPostcode(e.target.value)}
+              className="optimal-postcode-select"
+            >
+              <option value="">All Locations</option>
+              {availablePostcodes.map(pc => {
+                return (
+                  <option key={pc} value={pc}>
+                    {pc} - {FACILITY_NAMES[pc] || pc}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="optimal-window-list">
-        {optimalWindows.map((window, index) => (
+        {filteredWindows.map((window, index) => (
           <div
             key={`${window.postcode}-${window.startTime.getTime()}`}
             className="optimal-window-card"
@@ -271,10 +304,10 @@ const OptimalChargingWindowContainer = ({ regions }) => {
         ))}
       </div>
 
-      {optimalWindows.length > 0 && (
+      {filteredWindows.length > 0 && (
         <div className="optimal-window-tip">
           <strong>💡 Tip:</strong> Charging during these windows can significantly reduce your fleet's carbon footprint. 
-          The times shown are when grid electricity has the lowest carbon intensity in your region.
+          The times shown are when grid electricity has the lowest carbon intensity in {selectedPostcode ? 'this region' : 'your regions'}.
         </div>
       )}
     </div>
